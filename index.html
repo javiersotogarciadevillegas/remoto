@@ -7,7 +7,8 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background-color: #f0f4f8; color: #333; padding: 20px; display: flex; flex-direction: column; min-height: 100vh; }
-        h1 { text-align: center; color: #1a365d; margin-bottom: 20px; font-size: 22px; }
+        h1 { text-align: center; color: #1a365d; margin-bottom: 5px; font-size: 22px; }
+        .author-tag { text-align: center; font-size: 12px; color: #718096; margin-bottom: 20px; }
         
         .container { display: flex; gap: 20px; width: 100%; flex-wrap: wrap; }
         .panel { flex: 1; min-width: 320px; background: #ffffff; border-radius: 8px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
@@ -17,7 +18,7 @@
         .step-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; margin-bottom: 12px; }
         .step-title { font-weight: bold; font-size: 12px; margin-bottom: 4px; color: #4a5568; }
         
-        button { background-color: #007acc; color: white; border: none; padding: 8px 14px; font-size: 12px; border-radius: 4px; cursor: pointer; font-weight: 6px; }
+        button { background-color: #007acc; color: white; border: none; padding: 8px 14px; font-size: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         button:hover { background-color: #005999; }
         button:disabled { background-color: #cbd5e1; cursor: not-allowed; }
         
@@ -27,23 +28,31 @@
         .status-connected { color: #2f855a; background: #c6f6d5; }
         
         /* CONTENEDOR DE VÍDEO MEJORADO */
-        .video-wrapper { position: relative; width: 100%; background: #1a202c; border-radius: 8px; overflow: hidden; margin-top: 10px; border: 2px solid #007acc; }
+        .video-wrapper { position: relative; width: 100%; background: #1a202c; border-radius: 8px; overflow: hidden; margin-top: 20px; border: 2px solid #007acc; }
         video { width: 100%; display: block; background: #000; max-height: 65vh; }
         
         .video-controls { position: absolute; bottom: 10px; right: 10px; z-index: 10; }
-        .btn-fullscreen { background: rgba(0, 122, 204, 0.85); border: 1px solid white; padding: 6px 12px; font-size: 11px; }
+        .btn-fullscreen { background: rgba(0, 122, 204, 0.95); border: 1px solid white; padding: 8px 16px; font-size: 12px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .btn-fullscreen:hover { background: #005999; }
+
+        /* TEXTO DE AYUDA RÁPIDA */
+        .help-banner { background: #ebf8ff; border-left: 4px solid #3182ce; color: #2b6cb0; padding: 10px; font-size: 12px; border-radius: 4px; margin-bottom: 15px; line-height: 1.4; }
     </style>
 </head>
 <body>
 
     <h1>Prototipo de Asistencia Remota Visual (P2P)</h1>
+    <div class="author-tag">Desarrollado por Javier</div>
+
+    <div class="help-banner">
+        <strong>¿Cómo funciona?</strong> Este sistema conecta dos ordenadores directamente de navegador a navegador sin instalar programas. El <strong>Cliente</strong> comparte su pantalla y envía su código al <strong>Técnico</strong>. El Técnico genera una respuesta, se la devuelve al Cliente, y al pulsar conectar se iniciará la transmisión visual en tiempo real.
+    </div>
 
     <div class="container">
         <!-- 1. PANEL DEL CLIENTE -->
         <div class="panel">
             <h2>1. Panel del Cliente (Amigo)</h2>
-            <p>Usa esta sección en el ordenador que necesita ayuda.</p>
+            <p>Usa esta sección en el ordenador que necesita asistencia remota.</p>
             
             <div class="step-box">
                 <div class="step-title">Paso A: Selecciona pantalla y genera Oferta.</div>
@@ -52,12 +61,12 @@
 
             <div class="step-box">
                 <div class="step-title">Paso B: Copia la Oferta completa y envíasela al Técnico.</div>
-                <textarea id="clientOfferJson" readonly placeholder="Esperando acción del usuario..."></textarea>
+                <textarea id="clientOfferJson" readonly placeholder="Esperando a que compartas pantalla..."></textarea>
             </div>
 
             <div class="step-box">
                 <div class="step-title">Paso C: Pega la Respuesta del Técnico y conecta.</div>
-                <textarea id="clientAnswerJson" placeholder="Pega aquí la respuesta del Técnico..."></textarea>
+                <textarea id="clientAnswerJson" placeholder="Pega aquí el código que te envíe el Técnico..."></textarea>
                 <button id="connectBtn" style="margin-top: 6px;">Establecer Conexión</button>
             </div>
         </div>
@@ -65,17 +74,17 @@
         <!-- 2. PANEL DEL TÉCNICO -->
         <div class="panel">
             <h2>2. Panel del Técnico (Tú)</h2>
-            <p>Usa esta sección en tu propio ordenador.</p>
+            <p>Usa esta sección en tu propio ordenador para ver la pantalla remota.</p>
             
             <div class="step-box">
                 <div class="step-title">Paso A: Pega la Oferta del Cliente.</div>
-                <textarea id="techOfferJson" placeholder="Pega aquí la oferta del Cliente..."></textarea>
+                <textarea id="techOfferJson" placeholder="Pega aquí el código que te pase el Cliente..."></textarea>
                 <button id="createAnswerBtn" style="margin-top: 6px;">Generar Respuesta</button>
             </div>
 
             <div class="step-box">
                 <div class="step-title">Paso B: Copia esta Respuesta y envíasela a tu amigo.</div>
-                <textarea id="techAnswerJson" readonly placeholder="Esperando oferta..."></textarea>
+                <textarea id="techAnswerJson" readonly placeholder="Esperando a que pegues la oferta..."></textarea>
             </div>
 
             <div>
@@ -92,6 +101,7 @@
         <video id="remoteVideo" autoplay playsinline controls></video>
     </div>
 
+    <!-- Vinculación del script corregida -->
     <script src="webrtc.js"></script>
 </body>
 </html>
